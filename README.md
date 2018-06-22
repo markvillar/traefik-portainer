@@ -1,5 +1,8 @@
 # traefik-portainer
 
+## Prerequisite
+
+* docker network create traefik
 
 ## Config
 
