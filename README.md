@@ -3,6 +3,7 @@
 ## Prerequisite
 
 * docker network create traefik
+* create cron job (every minutes) to execute traefik.sh
 
 ## Config
 
