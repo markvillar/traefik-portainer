@@ -71,7 +71,7 @@ function regex_return_all_matches() {
 ##   DEFINE VAR   ##
 ####################
 SERVER_LIST=$(curl -u admin:admin -s "http://traefik.dev.local:8080/api/providers/docker/backends" | jq . | grep server- | egrep -v portainer | egrep -v traefik)
-PATTERN_SERVER='[a-z\-]+'
+PATTERN_SERVER='[a-z0-9\-]+'
 PATTERN_IP='[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
 
 
