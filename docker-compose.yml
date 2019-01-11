@@ -3,6 +3,7 @@ version: '3'
 services:
   proxy:
     image: traefik
+    container_name: traefik
     networks:
       - traefik
     ports:
@@ -10,27 +11,36 @@ services:
       - "8080:8080"
       - "443:443"
     volumes:
-      -  "$PWD/traefik.toml:/etc/traefik/traefik.toml"
-      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/traefik.toml:/etc/traefik/traefik.toml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_tmp:/tmp:rw
     restart: unless-stopped
     labels:
-      - "traefik.frontend.rule=Host:traefik.dev.local"
+      - "traefik.frontend.rule=Host:traefik.docker.for.mac.localhost"
       - "traefik.port=8080"
       - "traefik.backend=traefik"
       - "traefik.frontend.entryPoints=http"
 
   portainer:
     image: portainer/portainer
+    container_name: portainer
     networks:
       - traefik
     labels:
-      - "traefik.frontend.rule=Host:portainer.dev.local"
+      - "traefik.frontend.rule=Host:portainer.docker.for.mac.localhost"
       - "traefik.port=9000"
       - "traefik.backend=portainer"
       - "traefik.frontend.entryPoints=http"
     volumes:
-        - "/var/run/docker.sock:/var/run/docker.sock"
+      - portainer_data:/data:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     restart: unless-stopped
+
+volumes:
+  traefik_tmp:
+    driver: local
+  portainer_data:
+    driver: local
 
 networks:
   traefik:

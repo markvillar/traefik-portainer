@@ -70,7 +70,7 @@ function regex_return_all_matches() {
 ####################
 ##   DEFINE VAR   ##
 ####################
-SERVER_LIST=$(curl -u admin:admin -s "http://traefik.dev.local:8080/api/providers/docker/backends" | jq . | grep server- | egrep -v portainer | egrep -v traefik)
+SERVER_LIST=$(curl -u admin:admin -s "http://traefik.docker.for.mac.localhost:8080/api/providers/docker/backends" | jq . | grep server- | egrep -v portainer | egrep -v traefik)
 PATTERN_SERVER='[a-z0-9\-]+'
 PATTERN_IP='[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'
 
@@ -96,18 +96,18 @@ done
 for server in ${servers[*]}
 do
     unset r_match
-    STRING_IP_NOT_CLEAN=$(curl -u admin:admin -s "http://traefik.dev.local:8080/api/providers/docker/backends/backend-$server/servers/server-$server" | jq . | grep url )
+    STRING_IP_NOT_CLEAN=$(curl -u admin:admin -s "http://traefik.docker.for.mac.localhost:8080/api/providers/docker/backends/backend-$server/servers/server-$server" | jq . | grep url )
     regex_return_all_matches $PATTERN_IP "$STRING_IP_NOT_CLEAN"
     
     result_count=${#r_match[*]}
     for (( i=0; i<$result_count; i++))
     do
-        retval=$(grep "${r_match[i]} $server.dev.local" /etc/hosts)
+        retval=$(grep "${r_match[i]} $server.docker.for.mac.localhost" /etc/hosts)
         if [ ${#retval} -ge 1 ]  
-            then echo "${r_match[i]} $server.dev.local is already in /etc/hosts" 
+            then echo "${r_match[i]} $server.docker.for.mac.localhost is already in /etc/hosts" 
         else 
-            echo "${r_match[i]} $server.dev.local" >> /etc/hosts
-            echo "${r_match[i]} $server.dev.local has been added to /etc/hosts" 
+            echo "${r_match[i]} $server.docker.for.mac.localhost" >> /etc/hosts
+            echo "${r_match[i]} $server.docker.for.mac.localhost has been added to /etc/hosts" 
         fi
     done
 done
